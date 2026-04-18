@@ -840,6 +840,18 @@ h3 {
     padding-top: 26px;
   }
 
+  .hero-visual {
+    min-height: auto;
+  }
+
+  .hero-card {
+    position: static;
+  }
+
+  .hero-card-main {
+    inset: auto;
+  }
+
   .hero-contact-bar {
     flex-direction: column;
     align-items: flex-start;
@@ -869,7 +881,41 @@ h3 {
   }
 
   .hero-card-main {
-    inset: 0 0 92px 0;
+    inset: auto;
+  }
+
+  .hero-visual {
+    margin-top: 8px;
+  }
+
+  .hero-logo {
+    width: min(280px, 100%);
+    margin-bottom: 14px;
+  }
+
+  .hero-highlights article {
+    padding: 14px;
+  }
+
+  .hero-card-copy {
+    margin-top: 14px;
+    font-size: 0.98rem;
+  }
+
+  .specs {
+    margin-top: 16px;
+  }
+
+  .trust-ribbon {
+    margin-top: 16px;
+  }
+
+  .trust-ribbon article {
+    padding: 18px 20px;
+  }
+
+  .trust-ribbon strong {
+    font-size: 1.2rem;
   }
 
   .footer,
