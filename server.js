@@ -53,6 +53,10 @@ const server = http.createServer(async (req, res) => {
     return sendJson(res, 200, payload);
   }
 
+  if (requestUrl.pathname === "/api/proxy-image" && req.method === "GET") {
+    return proxyImage(requestUrl, res);
+  }
+
   if (requestUrl.pathname === "/api/contact" && req.method === "POST") {
     const payload = await saveContactLead(req);
     return sendJson(res, payload.ok ? 200 : 500, payload);
@@ -356,4 +360,36 @@ function sendJson(res, statusCode, payload) {
 function sendText(res, statusCode, text) {
   res.writeHead(statusCode, { "Content-Type": "text/plain; charset=utf-8" });
   res.end(text);
+}
+
+async function proxyImage(requestUrl, res) {
+  const sourceUrl = requestUrl.searchParams.get("url");
+
+  if (!sourceUrl) {
+    return sendText(res, 400, "Missing image url");
+  }
+
+  try {
+    const remoteUrl = new URL(sourceUrl);
+    const response = await fetch(remoteUrl, {
+      headers: {
+        "User-Agent": "Mozilla/5.0 Auto-SHASHA-Render-Proxy"
+      }
+    });
+
+    if (!response.ok) {
+      return sendText(res, response.status, "Failed to fetch image");
+    }
+
+    const contentType = response.headers.get("content-type") || "image/jpeg";
+    const arrayBuffer = await response.arrayBuffer();
+
+    res.writeHead(200, {
+      "Content-Type": contentType,
+      "Cache-Control": "public, max-age=3600"
+    });
+    res.end(Buffer.from(arrayBuffer));
+  } catch (error) {
+    return sendText(res, 500, `Image proxy error: ${error.message}`);
+  }
 }

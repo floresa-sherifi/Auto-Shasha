@@ -116,11 +116,19 @@ function resolveMediaUrl(item) {
     return "logo.jpg";
   }
 
-  if (item.media_type === "VIDEO" && item.thumbnail_url) {
-    return item.thumbnail_url;
+  const rawUrl = item.media_type === "VIDEO" && item.thumbnail_url
+    ? item.thumbnail_url
+    : (item.media_url || item.thumbnail_url || "logo.jpg");
+
+  if (!rawUrl || rawUrl === "logo.jpg") {
+    return "logo.jpg";
   }
 
-  return item.media_url || item.thumbnail_url || "logo.jpg";
+  if (rawUrl.startsWith("http://") || rawUrl.startsWith("https://")) {
+    return `/api/proxy-image?url=${encodeURIComponent(rawUrl)}`;
+  }
+
+  return rawUrl;
 }
 
 function formatDate(value) {
