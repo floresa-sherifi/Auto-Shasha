@@ -265,6 +265,28 @@ h3 {
   color: var(--text);
 }
 
+.map-link {
+  position: relative;
+  padding-right: 20px;
+}
+
+.map-link::after {
+  content: ">";
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #fff;
+  opacity: 0.85;
+  font-size: 1rem;
+}
+
+.trust-location-link {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
 .eyebrow {
   margin: 0 0 14px;
   color: #d7d7d7;
