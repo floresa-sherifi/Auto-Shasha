@@ -9,6 +9,7 @@ const contactSubmit = document.querySelector("#contact-submit");
 const initialInstagramItems = 9;
 let instagramItemsState = [];
 let instagramVisibleCount = initialInstagramItems;
+let instagramIsConnected = false;
 
 if (menuToggle && nav) {
   menuToggle.addEventListener("click", () => {
@@ -33,18 +34,33 @@ async function loadInstagramFeed() {
     return;
   }
 
+  if (window.location.protocol === "file:") {
+    instagramStatus.textContent = "Faqja eshte hapur si skedar lokal. Nise me `node server.js` dhe hape nga `http://localhost:3001` qe te shfaqen postimet.";
+    instagramItemsState = [];
+    instagramVisibleCount = initialInstagramItems;
+    instagramIsConnected = false;
+    renderInstagramItems([], false);
+    return;
+  }
+
   try {
     const response = await fetch("/api/instagram-media");
     const payload = await response.json();
 
+    if (!response.ok) {
+      throw new Error(payload.message || "Deshtoi ngarkimi i postimeve nga serveri.");
+    }
+
     instagramStatus.textContent = payload.message || "Postimet u ngarkuan.";
     instagramItemsState = payload.items || [];
     instagramVisibleCount = initialInstagramItems;
-    renderInstagramItems(instagramItemsState, payload.connected);
+    instagramIsConnected = Boolean(payload.connected);
+    renderInstagramItems(instagramItemsState, instagramIsConnected);
   } catch (error) {
-    instagramStatus.textContent = "Nuk u arrit lidhja me API. Po shfaqet pamja rezerve.";
+    instagramStatus.textContent = error.message || "Nuk u arrit lidhja me API. Po shfaqet pamja rezerve.";
     instagramItemsState = [];
     instagramVisibleCount = initialInstagramItems;
+    instagramIsConnected = false;
     renderInstagramItems([], false);
   }
 }
@@ -98,7 +114,7 @@ function renderInstagramItems(items, connected) {
 if (instagramLoadMore) {
   instagramLoadMore.addEventListener("click", () => {
     instagramVisibleCount += 9;
-    renderInstagramItems(instagramItemsState, true);
+    renderInstagramItems(instagramItemsState, instagramIsConnected);
   });
 }
 
