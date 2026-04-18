@@ -1,0 +1,9 @@
+{
+  "name": "auto-shasha-site",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Auto SHASHA website with Instagram Graph API integration",
+  "scripts": {
+    "start": "node server.js"
+  }
+}
