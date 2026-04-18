@@ -51,7 +51,7 @@ async function loadInstagramFeed() {
       throw new Error(payload.message || "Deshtoi ngarkimi i postimeve nga serveri.");
     }
 
-    instagramStatus.textContent = payload.message || "Postimet u ngarkuan.";
+    instagramStatus.textContent = payload.connected ? "" : (payload.message || "Postimet u ngarkuan.");
     instagramItemsState = payload.items || [];
     instagramVisibleCount = initialInstagramItems;
     instagramIsConnected = Boolean(payload.connected);
